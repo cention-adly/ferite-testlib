@@ -1,0 +1,17 @@
+uses '../test','../assert';
+
+testsuite('Basic tests') using {
+	test('See if test works') using {};
+	
+	test('See if we can assert errors') using {
+		assert_error('test error') using {
+			raise new Error('test error');
+		};
+	};
+	
+	test('See what happens when assert_error fails') using {
+		assert_error('raise') using {
+			assert_error('mango') using {};
+		};
+	};
+};

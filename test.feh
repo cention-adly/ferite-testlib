@@ -1,0 +1,85 @@
+uses 'console';
+
+function test (string description) {
+	object t = recipient();
+	TestSuite.tests.push([
+		'description' => description,
+		'test_closure' => t
+	]);
+}
+
+function testsuite (string description) {
+	object s = recipient();
+	TestSuite.init();
+	s.invoke();
+	TestSuite.run();
+}
+
+namespace TestSuite {
+	array tests;
+	array errors;
+	number count;
+	
+	function init () {
+		.tests = [];
+		.errors = [];
+		.count = 0;
+	}
+	
+	function run () {
+		if (argv.valueExists('tap')) {
+			Console.println('1..' + .tests.size());
+		}
+	
+		.tests.each() using (testcase) {
+			monitor {
+				testcase.test_closure.invoke();
+			}
+			handle {
+				string errmsg = "${testcase.description}\n\t${err.str}";
+				.errors.push(errmsg);
+				.print('not ok', .count, errmsg);
+				.count++;
+				return;
+			}
+			.print('ok', .count, testcase.description);
+			.count++;
+		};
+	
+		if (!argv.valueExists('tap')) {		
+			if (.count == .tests.size()) {
+				Console.println("${.count} tests complete.");
+			}
+			else {
+				Console.println(
+					"Tests failed to run to completion." +
+					" ${.count} out of ${.tests.size()} tests complete."
+				);
+			}
+		
+			if (.errors.size() == 0) {
+				Console.println('All OK');
+			}
+			else {
+				Console.println("${.errors.size()} out of ${.count} tests FAILED");
+				Console.println(             '================================================');
+				Console.println(.errors.join("------------------------------------------------\n"));
+				Console.println(             '================================================');
+			}
+		}
+	}
+	
+	function print (string status, number count, string txt) {
+		if (argv.valueExists('tap')) {
+			Console.println([status,count+1,'-',txt].join(' '));
+		}
+		else if (argv.valueExists('verbose')) {
+			if (status == 'ok') {
+				Console.println('OK: ' + txt);
+			}
+			else {
+				Console.println('FAIL: ' + txt);
+			}
+		}
+	}
+}

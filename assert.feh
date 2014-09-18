@@ -1,0 +1,55 @@
+uses 'regexp';
+
+function assert (void subject) {
+	return new Assert(subject);
+}
+
+function assert_error (string err_match) {
+	object t = recipient();
+	
+	monitor {
+		t.invoke();
+	}
+	handle {
+		if (Regexp.match(err_match,err.str)) return;
+		else raise new Error('Error "' + err.str + '" does not match "' + err_match + '"');
+	}
+	raise new Error('Expected error "' + err_match + '" not raised');
+}
+
+class Assert {
+	void SUBJECT;
+
+	function constructor (void subject) {
+		.SUBJECT = subject;
+	}
+	
+	function is (string t) {
+		if (.SUBJECT == t) return;
+		raise new Error('Values not equal: ' + .SUBJECT + ', ' + t);
+	}
+	
+	function is (array t) {
+		if (.SUBJECT.size() == t.size()) {
+			for (number i=0;i<t.size();i++) {
+				assert(.SUBJECT.sort()[i]).is(t.sort()[i]);
+			}
+			return;
+		}
+		raise new Error('Values not equal: ' + .SUBJECT + ', ' + t);
+	}
+	
+	function is (number t) {
+		if (.SUBJECT == t) return;
+		raise new Error('Values not equal: ' + .SUBJECT + ', ' + t);
+	}
+	
+	function contains (void t) {
+	
+	}
+	
+	function contains (string key,void t) {
+	
+	}
+}
+
