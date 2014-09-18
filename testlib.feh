@@ -36,17 +36,17 @@ namespace TestSuite {
 				testcase.test_closure.invoke();
 			}
 			handle {
-				string errmsg = "${testcase.description}\n\t${err.str}";
 				void trace = err.backtrace[0];
 				.errors.push([
-					'error' => errmsg,
+					'description' => testcase.description,
+					'error' => err.str,
 					'trace' => "${trace['file']}:${trace['line']}"
 				]);
-				.print('not ok', .count, errmsg);
+				.print('not ok', .count, testcase.description, err.str);
 				.count++;
 				return;
 			}
-			.print('ok', .count, testcase.description);
+			.print('ok', .count, testcase.description, '');
 			.count++;
 		};
 	
@@ -69,7 +69,7 @@ namespace TestSuite {
 				Console.println('================================================');
 				Console.println(
 					.errors.process() using (e) {
-						return e.error + "\t" + e.trace;
+						return e.error + "\n\t" + e.trace;
 					}.join(     "------------------------------------------------\n")
 				);
 				Console.println('================================================');
@@ -77,16 +77,16 @@ namespace TestSuite {
 		}
 	}
 	
-	function print (string status, number count, string txt) {
+	function print (string status, number count, string txt, string error) {
 		if (argv.valueExists('tap')) {
-			Console.println([status,count+1,'-',txt].join(' '));
+			Console.println([status,count+1,'-',txt, (error == ''?'':', '+error)].join(' '));
 		}
 		else if (argv.valueExists('verbose')) {
 			if (status == 'ok') {
 				Console.println('OK: ' + txt);
 			}
 			else {
-				Console.println('FAIL: ' + txt);
+				Console.println('FAIL: ' + txt + "\n\t" + error);
 			}
 		}
 	}
