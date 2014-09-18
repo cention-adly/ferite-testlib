@@ -10,25 +10,30 @@ function test (string description) {
 
 function testsuite (string description) {
 	object s = recipient();
-	TestSuite.init();
+	TestSuite.init(description);
 	s.invoke();
 	TestSuite.run();
 }
 
 namespace TestSuite {
+	string description;
 	array tests;
 	array errors;
 	number count;
 	
-	function init () {
+	function init (string d) {
 		.tests = [];
 		.errors = [];
 		.count = 0;
+		.description = d;
 	}
 	
 	function run () {
 		if (argv.valueExists('tap')) {
 			Console.println('1..' + .tests.size());
+		}
+		else {
+			Console.println('Running test suite: ' + .description);
 		}
 	
 		.tests.each() using (testcase) {
