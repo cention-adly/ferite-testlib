@@ -1,0 +1,5 @@
+uses 'testlib', 'assert';
+
+testsuite('Installation test') using {
+	test('Check if installation of testlib is successful') using {};
+};

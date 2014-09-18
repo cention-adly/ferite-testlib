@@ -37,7 +37,11 @@ namespace TestSuite {
 			}
 			handle {
 				string errmsg = "${testcase.description}\n\t${err.str}";
-				.errors.push(errmsg);
+				void trace = err.backtrace[0];
+				.errors.push([
+					'error' => errmsg,
+					'trace' => "${trace['file']}:${trace['line']}"
+				]);
 				.print('not ok', .count, errmsg);
 				.count++;
 				return;
@@ -62,9 +66,13 @@ namespace TestSuite {
 			}
 			else {
 				Console.println("${.errors.size()} out of ${.count} tests FAILED");
-				Console.println(             '================================================');
-				Console.println(.errors.join("------------------------------------------------\n"));
-				Console.println(             '================================================');
+				Console.println('================================================');
+				Console.println(
+					.errors.process() using (e) {
+						return e.error + "\t" + e.trace;
+					}.join(     "------------------------------------------------\n")
+				);
+				Console.println('================================================');
 			}
 		}
 	}

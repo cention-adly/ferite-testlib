@@ -1,4 +1,4 @@
-uses '../test','../assert';
+uses '../testlib', '../assert';
 
 testsuite('Basic tests') using {
 	test('See if test works') using {};

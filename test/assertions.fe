@@ -1,0 +1,21 @@
+uses 'testlib', '../assert';
+
+testsuite('Assertions') using {
+	test('assert.is') using {
+		assert('string').is('string');
+		assert(100).is(100);
+		assert([1,2,3]).is([1,2,3]);
+	};
+	
+	test('assert.is failure') using {
+		assert_error('not equal') using {
+			assert('hello').is('bye');
+		};
+		assert_error('not equal') using {
+			assert(1).is(2);
+		};
+		assert_error('not equal') using {
+			assert([1,2,3]).is([1,2]);
+		};
+	};
+};

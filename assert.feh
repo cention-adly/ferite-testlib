@@ -32,7 +32,7 @@ class Assert {
 	function is (array t) {
 		if (.SUBJECT.size() == t.size()) {
 			for (number i=0;i<t.size();i++) {
-				assert(.SUBJECT.sort()[i]).is(t.sort()[i]);
+				assert(.SUBJECT[i]).is(t[i]);
 			}
 			return;
 		}
