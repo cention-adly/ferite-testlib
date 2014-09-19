@@ -18,4 +18,8 @@ testsuite('Assertions') using {
 			assert([1,2,3]).is([1,2]);
 		};
 	};
+	
+	test('must fail') using {
+		assert('hello').is(1);
+	};
 };

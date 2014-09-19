@@ -45,7 +45,10 @@ namespace TestSuite {
 				.errors.push([
 					'description' => testcase.description,
 					'error' => err.str,
-					'trace' => "${trace['file']}:${trace['line']}"
+					'source' => "${trace['file']}:${trace['line']}",
+					'trace' => err.backtrace[1..].process() using (t) {
+						return "\tcalled from ${t.file}:${t.line} ${t.function}()";
+					}.join("\n")
 				]);
 				.print('not ok', .count, testcase.description, err.str);
 				.count++;
@@ -74,7 +77,11 @@ namespace TestSuite {
 				Console.println('================================================');
 				Console.println(
 					.errors.process() using (e) {
-						return e.error + "\n\t" + e.trace;
+						string ret = e.error + "\n\t" + e.source;
+						if (argv.valueExists('verbose') || argv.valueExists('trace')) {
+							ret += "\n" + e.trace;
+						}
+						return ret;
 					}.join(     "------------------------------------------------\n")
 				);
 				Console.println('================================================');
