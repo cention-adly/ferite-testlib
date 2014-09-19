@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<yard name="ferite-testlib">
+
+	<property id="name" value="ferite-testlib" />
+	<property id="version" value="1.0" />
+	
+	<collection id="testlib">
+		<list type="module">
+			<file name="assert.feh" />
+			<file name="testlib.feh" />
+		</list>
+		<list type="xml">
+			<file name="xml/assert.xml" />
+			<file name="xml/testlib.xml" />
+		</list>
+	</collection>
+	
+	<phase id="install">
+		<copy source="testlib.module" target="$(FeriteModuleSourceDir)" maintainpath="true" />
+		<copy source="testlib.xml" target="$(FeriteModuleDescriptionDir)" />
+		<execute program="feritedoc" arguments="--regenerate" />
+	</phase>
+</yard>
