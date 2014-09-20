@@ -1,0 +1,123 @@
+uses 'console', 'sys';
+
+class TestlibFormatter {
+	static array formats;
+	array selected_formatter;
+	
+	function constructor (string formatter) {
+		if (TestlibFormatter.formats[formatter]) {
+			.selected_formatter = TestlibFormatter.formats[formatter];
+		}
+		else {
+			.selected_formatter = TestlibFormatter.formats['default'];
+		}
+	}
+	
+	function constructor () {
+		.selected_formatter = TestlibFormatter.formats['default'];	
+	}
+
+	function printHeader (string testsuite, number total_tests) {
+		.selected_formatter.header.invoke(testsuite, total_tests);
+	}
+
+	function printOK (number id, string description) {
+		.selected_formatter.ok.invoke(id,description);
+	}
+	
+	function printFAIL (number id, string description, string error, string source) {
+		.selected_formatter.fail.invoke(id,description,error,source);
+	}
+	
+	function printSummary (number total_tests, number count, array errors) {
+		.selected_formatter.summary.invoke(total_tests,count,errors);
+	}
+}
+
+TestlibFormatter.formats['default'] = [
+	'header' => closure (string testsuite, number total_tests) {
+		Console.println('Test suite: ' + testsuite);
+	},
+	'ok' => closure (number id, string description) {
+		Console.print('.');
+		Sys.stdout().flush();
+	},
+	'fail' => closure (number id, string description, string error, string source) {
+		Console.print('X');
+		Sys.stdout().flush();
+	},
+	'summary' => closure (number total_tests, number count, array errors) {
+		if (count == total_tests) {
+			Console.println("\n${count} tests complete.");
+		}
+		else {
+			Console.println(
+				"Tests failed to run to completion." +
+				" ${count} out of ${total_tests} tests complete."
+			);
+		}
+	
+		if (errors.size() == 0) {
+			Console.println('All OK');
+		}
+		else {
+			Console.println("${errors.size()} out of ${count} tests FAILED");
+			Console.println('================================================');
+			Console.println(
+				errors.process() using (e) {
+					return e.error + "\n\t" + e.source;
+				}.join(     "------------------------------------------------\n")
+			);
+			Console.println('================================================');
+		}
+	}
+];
+
+TestlibFormatter.formats['verbose'] = [
+	'header' => TestlibFormatter.formats['default'].header,
+	'ok' => closure (number id, string description) {
+		Console.println('OK: ' + description);
+	},
+	'fail' => closure (number id, string description, string error, string source) {
+		Console.println('FAIL: ' + description);
+		Console.println("\t${error}");
+	},
+	'summary' => closure (number total_tests, number count, array errors) {
+		if (count == total_tests) {
+			Console.println("\n${count} tests complete.");
+		}
+		else {
+			Console.println(
+				"Tests failed to run to completion." +
+				" ${count} out of ${total_tests} tests complete."
+			);
+		}
+	
+		if (errors.size() == 0) {
+			Console.println('All OK');
+		}
+		else {
+			Console.println("${errors.size()} out of ${count} tests FAILED");
+			Console.println('================================================');
+			Console.println(
+				errors.process() using (e) {
+					return e.error + "\n\t" + e.source + "\n" + e.trace;
+				}.join(     "------------------------------------------------\n")
+			);
+			Console.println('================================================');
+		}
+	}
+];
+
+TestlibFormatter.formats['tap'] = [
+	'header' => closure (string testsuite, number total_tests) {
+		Console.println('1..' + total_tests);
+	},
+	'ok' => closure (number id, string description) {
+		Console.println('ok ' + (id+1) + ' - ' + description);
+	},
+	'fail' => closure (number id, string description, string error, string source) {
+		Console.println('not ok ' + (id+1) + ' - ' + description + ', ' + error);
+	},
+	'summary' => closure (number total_tests, number count, array errors) {}
+];

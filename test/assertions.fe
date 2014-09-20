@@ -1,4 +1,4 @@
-uses 'testlib', '../assert';
+uses '../testlib', '../assert';
 
 testsuite('Assertions') using {
 	test('assert.is') using {

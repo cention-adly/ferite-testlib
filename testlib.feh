@@ -1,4 +1,5 @@
 uses 'console';
+uses 'testlib_formatter';
 
 function test (string description) {
 	object t = recipient();
@@ -19,6 +20,7 @@ namespace TestSuite {
 	string description;
 	array tests;
 	array errors;
+	array options;
 	number count;
 	
 	function init (string d) {
@@ -26,15 +28,19 @@ namespace TestSuite {
 		.errors = [];
 		.count = 0;
 		.description = d;
+		.options = [
+			'formatter' => 'default'
+		];
+		
+		if (argv.size()) {
+			.options.formatter = argv[0];
+		}
 	}
 	
 	function run () {
-		if (argv.valueExists('tap')) {
-			Console.println('1..' + .tests.size());
-		}
-		else {
-			Console.println('Running test suite: ' + .description);
-		}
+		object output = new TestlibFormatter(.options.formatter);
+		
+		output.printHeader(.description, .tests.size());
 	
 		.tests.each() using (testcase) {
 			monitor {
@@ -50,43 +56,20 @@ namespace TestSuite {
 						return "\tcalled from ${t.file}:${t.line} ${t.function}()";
 					}.join("\n")
 				]);
-				.print('not ok', .count, testcase.description, err.str);
+				output.printFAIL(
+					.count,
+					testcase.description,
+					err.str,
+					"${trace['file']}:${trace['line']}"
+				);
 				.count++;
 				return;
 			}
-			.print('ok', .count, testcase.description, '');
+			output.printOK(.count, testcase.description);
 			.count++;
 		};
 	
-		if (!argv.valueExists('tap')) {		
-			if (.count == .tests.size()) {
-				Console.println("${.count} tests complete.");
-			}
-			else {
-				Console.println(
-					"Tests failed to run to completion." +
-					" ${.count} out of ${.tests.size()} tests complete."
-				);
-			}
-		
-			if (.errors.size() == 0) {
-				Console.println('All OK');
-			}
-			else {
-				Console.println("${.errors.size()} out of ${.count} tests FAILED");
-				Console.println('================================================');
-				Console.println(
-					.errors.process() using (e) {
-						string ret = e.error + "\n\t" + e.source;
-						if (argv.valueExists('verbose') || argv.valueExists('trace')) {
-							ret += "\n" + e.trace;
-						}
-						return ret;
-					}.join(     "------------------------------------------------\n")
-				);
-				Console.println('================================================');
-			}
-		}
+		output.printSummary(.tests.size(),.count,.errors);
 	}
 	
 	function print (string status, number count, string txt, string error) {
