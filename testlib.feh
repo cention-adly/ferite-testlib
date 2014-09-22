@@ -1,7 +1,7 @@
 uses 'console';
 uses 'testlib_formatter';
 
-function test (string description) {
+function testcase (string description) {
 	object t = recipient();
 	TestSuite.tests.push([
 		'description' => description,

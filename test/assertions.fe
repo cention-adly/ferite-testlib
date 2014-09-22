@@ -1,13 +1,13 @@
 uses '../testlib', '../assert';
 
 testsuite('Assertions') using {
-	test('assert.is') using {
+	testcase('assert.is') using {
 		assert('string').is('string');
 		assert(100).is(100);
 		assert([1,2,3]).is([1,2,3]);
 	};
 	
-	test('assert.is failure') using {
+	testcase('assert.is failure') using {
 		assert_error('not equal') using {
 			assert('hello').is('bye');
 		};
@@ -19,7 +19,7 @@ testsuite('Assertions') using {
 		};
 	};
 	
-	test('must fail') using {
+	testcase('must fail') using {
 		assert('hello').is(1);
 	};
 };
