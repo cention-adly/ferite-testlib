@@ -8,10 +8,12 @@
 		<list type="module">
 			<file name="assert.feh" />
 			<file name="testlib.feh" />
+			<file name="testlib_formatter.feh" />
 		</list>
 		<list type="xml">
 			<file name="xml/assert.xml" />
 			<file name="xml/testlib.xml" />
+			<file name="xml/testlib_formatter.xml" />
 		</list>
 	</collection>
 	
