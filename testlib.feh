@@ -42,14 +42,14 @@ namespace TestSuite {
 		
 		output.printHeader(.description, .tests.size());
 	
-		.tests.each() using (testcase) {
+		.tests.each() using (t) {
 			monitor {
-				testcase.test_closure.invoke();
+				t.test_closure.invoke();
 			}
 			handle {
 				void trace = err.backtrace[0];
 				.errors.push([
-					'description' => testcase.description,
+					'description' => t.description,
 					'error' => err.str,
 					'source' => "${trace['file']}:${trace['line']}",
 					'trace' => err.backtrace[1..].process() using (t) {
@@ -58,14 +58,14 @@ namespace TestSuite {
 				]);
 				output.printFAIL(
 					.count,
-					testcase.description,
+					t.description,
 					err.str,
 					"${trace['file']}:${trace['line']}"
 				);
 				.count++;
 				return;
 			}
-			output.printOK(.count, testcase.description);
+			output.printOK(.count, t.description);
 			.count++;
 		};
 	
