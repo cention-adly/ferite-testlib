@@ -1,25 +1,67 @@
 uses '../testlib', '../assert';
 
 testsuite('Assertions') using {
-	testcase('assert.is') using {
-		assert('string').is('string');
-		assert(100).is(100);
-		assert([1,2,3]).is([1,2,3]);
+	testcase('assert.equals') using {
+		assert('string').equals('string');
+		assert(100).equals(100);
+		assert([1,2,3]).equals([1,2,3]);
 	};
 	
 	testcase('assert.is failure') using {
 		assert_error('not equal') using {
-			assert('hello').is('bye');
+			assert('hello').equals('bye');
 		};
 		assert_error('not equal') using {
-			assert(1).is(2);
+			assert(1).equals(2);
 		};
 		assert_error('not equal') using {
-			assert([1,2,3]).is([1,2]);
+			assert([1,2,3]).equals([1,2]);
 		};
 	};
 	
 	testcase('must fail') using {
-		assert('hello').is(1);
+		assert('hello').equals(1);
+	};
+	
+	testcase('array contains a value') using {
+		assert([1,2,3]).contains(3);
+		assert(['hello','world']).contains('world');
+		
+		assert_error('does not contain') using {
+			assert([1,2,3]).contains(4);
+		};
+		assert_error('does not contain') using {
+			assert([1,2,3]).contains('mango');
+		};
+		assert_error('does not contain') using {
+			assert(['hello','world']).contains('goodbye');
+		};
+		assert_error('does not contain') using {
+			assert(['hello','world']).contains(5);
+		};
+	};
+	
+	testcase('array contains key=>value pair') using {
+		assert([
+			'string' => 'hello',
+			'number' => 1
+		]).contains('number',1);
+		assert_error('does not contain') using {
+			assert([
+				'string' => 'hello',
+				'number' => 1
+			]).contains('ghost','shark');
+		};
+	};
+	
+	testcase('not assertions') using {
+		assert('hello').doesNot.equals('bye');
+		assert(1).doesNot.equals(2);
+		assert([1,2,3]).doesNot.equals([1,2]);
+		assert([1,2,3]).doesNot.contains(4);
+		assert([
+			'string' => 'hello',
+			'number' => 1
+		]).doesNot.contains('ghost','shark');
 	};
 };

@@ -53,7 +53,7 @@ TestlibFormatter.formats['default'] = [
 		else {
 			Console.println(
 				"Tests failed to run to completion." +
-				" ${count} out of ${total_tests} tests complete."
+				" ${count} out of ${total_tests} tests completed."
 			);
 		}
 	
@@ -61,12 +61,12 @@ TestlibFormatter.formats['default'] = [
 			Console.println('All OK');
 		}
 		else {
-			Console.println("${errors.size()} out of ${count} tests FAILED");
+			Console.println("${errors.size()} tests FAILED");
 			Console.println('================================================');
 			Console.println(
 				errors.process() using (e) {
 					return e.error + "\n\t" + e.source;
-				}.join(     "------------------------------------------------\n")
+				}.join(     "\n------------------------------------------------\n")
 			);
 			Console.println('================================================');
 		}
@@ -89,7 +89,7 @@ TestlibFormatter.formats['verbose'] = [
 		else {
 			Console.println(
 				"Tests failed to run to completion." +
-				" ${count} out of ${total_tests} tests complete."
+				" ${count} out of ${total_tests} tests completed."
 			);
 		}
 	
@@ -97,12 +97,12 @@ TestlibFormatter.formats['verbose'] = [
 			Console.println('All OK');
 		}
 		else {
-			Console.println("${errors.size()} out of ${count} tests FAILED");
+			Console.println("${errors.size()} tests FAILED");
 			Console.println('================================================');
 			Console.println(
 				errors.process() using (e) {
 					return e.error + "\n\t" + e.source + "\n" + e.trace;
-				}.join(     "------------------------------------------------\n")
+				}.join(     "\n------------------------------------------------\n")
 			);
 			Console.println('================================================');
 		}

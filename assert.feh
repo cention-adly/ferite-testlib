@@ -12,44 +12,137 @@ function assert_error (string err_match) {
 	}
 	handle {
 		if (Regexp.match(err_match,err.str)) return;
-		else raise new Error('Error "' + err.str + '" does not match "' + err_match + '"');
+		else raise new Error('Assertion: Error "' + err.str + '" does not match "' + err_match + '"');
 	}
-	raise new Error('Expected error "' + err_match + '" not raised');
+	raise new Error('Assertion: Expected error "' + err_match + '" not raised');
 }
 
 class Assert {
+	void SUBJECT;
+	object doesNot;
+
+	function constructor (void subject) {
+		.SUBJECT = subject;
+		.doesNot = new NotAssert(.SUBJECT);
+	}
+	
+	static function parray (array a) {
+		if (a.size() > 3) {
+			return ' [' + a[0..2].join(',') + '...] ';
+		}
+		return ' [' + a.join(',') + '] ';
+	}
+	
+	function equals (string t) {
+		if (.SUBJECT == t) return;
+		raise new Error('Assertion: ' + .SUBJECT + ' does not equal ' + t);
+	}
+	
+	function equals (array t) {
+		if (.SUBJECT.size() == t.size()) {
+			for (number i=0;i<t.size();i++) {
+				assert(.SUBJECT[i]).equals(t[i]);
+			}
+			return;
+		}
+		raise new Error(
+			'Assertion:' + Assert.parray(.SUBJECT) +
+			'does not equal' + Assert.parray(t)
+		);
+	}
+	
+	function equals (number t) {
+		if (.SUBJECT == t) return;
+		raise new Error('Assertion: ' + .SUBJECT + ' does not equal ' + t);
+	}
+	
+	function contains (void t) {
+		for (number i=0;i<.SUBJECT.size();i++) {
+			if (.SUBJECT[i] == t) {
+				return;
+			}
+		}
+		raise new Error(
+			'Assertion:' + Assert.parray(.SUBJECT) +
+			'does not contain: ' + t
+		);
+	}
+	
+	function contains (string key,void t) {
+		array err_map;
+		number count = 0;
+		number found = 0;
+		.SUBJECT.map() using (k,v) {
+			if (count++ < 4) {
+				err_map.push("${k}=>${v}");
+			}
+			if (k == key && v == t) found = 1;
+		};
+		if (!found) {
+			raise new Error(
+				'Assertion:' + Assert.parray(err_map) +
+				'does not contain: [' + key + '=>' + t + ']'
+			);
+		}
+	}
+}
+
+class NotAssert {
 	void SUBJECT;
 
 	function constructor (void subject) {
 		.SUBJECT = subject;
 	}
 	
-	function is (string t) {
-		if (.SUBJECT == t) return;
-		raise new Error('Values not equal: ' + .SUBJECT + ', ' + t);
+	function equals (string t) {
+		if (.SUBJECT != t) return;
+		raise new Error('Assertion: ' + .SUBJECT + ' equals ' + t);
 	}
 	
-	function is (array t) {
-		if (.SUBJECT.size() == t.size()) {
+	function equals (array t) {
+		if (.SUBJECT.size() != t.size()) {
 			for (number i=0;i<t.size();i++) {
-				assert(.SUBJECT[i]).is(t[i]);
+				assert(.SUBJECT[i]).equals(t[i]);
 			}
 			return;
 		}
-		raise new Error('Values not equal: ' + .SUBJECT + ', ' + t);
+		raise new Error(
+			'Assertion:' + Assert.parray(.SUBJECT) +
+			'equals' + Assert.parray(t)
+		);
 	}
 	
-	function is (number t) {
-		if (.SUBJECT == t) return;
-		raise new Error('Values not equal: ' + .SUBJECT + ', ' + t);
+	function equals (number t) {
+		if (.SUBJECT != t) return;
+		raise new Error('Assertion: ' + .SUBJECT + ' equals ' + t);
 	}
 	
 	function contains (void t) {
-	
+		for (number i=0;i<.SUBJECT.size();i++) {
+			if (.SUBJECT[i] == t) {
+				raise new Error(
+					'Assertion:' + Assert.parray(.SUBJECT) +
+					'contains: ' + t
+				);
+			}
+		}
 	}
 	
 	function contains (string key,void t) {
-	
+		array err_map;
+		number count = 0;
+		number found = 0;
+		.SUBJECT.map() using (k,v) {
+			if (count++ < 4) {
+				err_map.push("${k}=>${v}");
+			}
+			if (k == key && v == t) found = 1;
+		};
+		if (found) {
+			raise new Error(
+				'Assertion:' + Assert.parray(err_map) +
+				'contains: [' + key + '=>' + t + ']'
+			);
+		}
 	}
 }
-
