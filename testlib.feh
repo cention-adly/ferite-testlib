@@ -47,12 +47,12 @@ namespace TestSuite {
 				t.test_closure.invoke();
 			}
 			handle {
-				void trace = err.backtrace[0];
+				void trace = err.backtrace[1];
 				.errors.push([
 					'description' => t.description,
 					'error' => err.str,
 					'source' => "${trace['file']}:${trace['line']}",
-					'trace' => err.backtrace[1..].process() using (t) {
+					'trace' => err.backtrace[2..].process() using (t) {
 						return "\tcalled from ${t.file}:${t.line} ${t.function}()";
 					}.join("\n")
 				]);
