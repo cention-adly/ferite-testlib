@@ -30,7 +30,7 @@ get_timestamp () {
 }
 
 run_tests () {
-	if [ $WATCH ];then clear ;fi
+	if [ $WATCH -eq 1 ];then clear ;fi
 
 	for x in `find_testdirs`;do
 		cd $x
