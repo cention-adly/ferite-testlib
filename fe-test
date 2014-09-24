@@ -16,8 +16,20 @@ while [ $# -gt 0 ];do
 	esac
 done
 
+find_testdirs () {
+	find -type d -name t -or -name test -or -name tests
+}
+
+find_files_to_monitor () {
+	find -not -path '*/.*' -and -not -path '*/FarmYard*'
+}
+
+get_timestamp () {
+	stat -c %Y $1
+}
+
 run_tests () {
-	for x in `find -type d -name t -or -name test -or -name tests`;do
+	for x in `find_testdirs`;do
 		cd $x
 			for t in *;do
 				ferite $t ${FERITE_ARGS[@]}
@@ -30,9 +42,25 @@ run_tests
 
 if [ $WATCH -eq 1 ];then
 	if [ "`which inotifywait`" != "" ];then
-		while inotifywait -q -r -e modify -e create -e delete .; do
+		while inotifywait -q -r -e modify -e create -e delete .;do
 			clear
 			run_tests
+		done
+	else
+		declare -A TIMESTAMPS
+		for x in `find_files_to_monitor`;do
+			TIMESTAMPS[$x]=`get_timestamp $x`
+		done
+		while true;do
+			sleep 1
+			for x in `find_files_to_monitor`;do
+				t=`get_timestamp $x`
+				if [ $t -ne ${TIMESTAMPS[$x]} ];then
+					TIMESTAMPS[$x]=$t
+					clear
+					run_tests
+				fi
+			done
 		done
 	fi
 fi
