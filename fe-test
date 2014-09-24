@@ -2,6 +2,7 @@
 
 FERITE_ARGS=()
 WATCH=0
+SUMMARY_LOG=`pwd`/.test_summary
 
 while [ $# -gt 0 ];do
 	op="$1"
@@ -32,10 +33,13 @@ run_tests () {
 	for x in `find_testdirs`;do
 		cd $x
 			for t in *;do
-				ferite $t ${FERITE_ARGS[@]}
+				ferite $t ${FERITE_ARGS[@]} 2>> $SUMMARY_LOG
 			done
 		cd ..
 	done
+	echo
+	cat $SUMMARY_LOG
+	rm $SUMMARY_LOG
 }
 
 run_tests
