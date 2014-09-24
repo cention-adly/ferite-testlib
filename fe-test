@@ -1,9 +1,38 @@
 #! /bin/bash
 
-for x in `find -type d -name t -or -name test -or -name tests`;do
-	cd $x
-		for t in *;do
-			ferite $t $@
-		done
-	cd ..
+FERITE_ARGS=()
+WATCH=0
+
+while [ $# -gt 0 ];do
+	op="$1"
+	shift
+	case "$op" in
+		-w)
+			WATCH=1
+			;;
+		*)
+			FERITE_ARGS+=("$op")
+			;;
+	esac
 done
+
+run_tests () {
+	for x in `find -type d -name t -or -name test -or -name tests`;do
+		cd $x
+			for t in *;do
+				ferite $t ${FERITE_ARGS[@]}
+			done
+		cd ..
+	done
+}
+
+run_tests
+
+if [ $WATCH -eq 1 ];then
+	if [ "`which inotifywait`" != "" ];then
+		while inotifywait -q -r -e modify -e create -e delete .; do
+			clear
+			run_tests
+		done
+	fi
+fi
