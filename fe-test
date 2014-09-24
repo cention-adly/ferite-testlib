@@ -30,6 +30,8 @@ get_timestamp () {
 }
 
 run_tests () {
+	if [ $WATCH ];then clear ;fi
+
 	for x in `find_testdirs`;do
 		cd $x
 			for t in *;do
@@ -47,7 +49,6 @@ run_tests
 if [ $WATCH -eq 1 ];then
 	if [ "`which inotifywait`" != "" ];then
 		while inotifywait -q -r -e modify -e create -e delete .;do
-			clear
 			run_tests
 		done
 	else
