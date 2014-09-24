@@ -4,6 +4,14 @@ class TestlibFormatter {
 	static array formats;
 	array selected_formatter;
 	
+	static function RED (string txt) {
+		return "\033[0;31m${txt}\033[0;m";
+	}
+	
+	static function GREEN (string txt) {
+		return "\033[0;32m${txt}\033[0;m";
+	}
+	
 	function constructor (string formatter) {
 		if (TestlibFormatter.formats[formatter]) {
 			.selected_formatter = TestlibFormatter.formats[formatter];
@@ -36,75 +44,65 @@ class TestlibFormatter {
 
 TestlibFormatter.formats['default'] = [
 	'header' => closure (string testsuite, number total_tests) {
-		Console.println('Test suite: ' + testsuite);
-	},
-	'ok' => closure (number id, string description) {
-		Console.print('.');
+		Console.print('Test suite: ' + testsuite);
 		Sys.stdout().flush();
 	},
-	'fail' => closure (number id, string description, string error, string source) {
-		Console.print('X');
-		Sys.stdout().flush();
-	},
+	'ok' => closure (number id, string description) {},
+	'fail' => closure (number id, string description, string error, string source) {},
 	'summary' => closure (number total_tests, number count, array errors) {
-		if (count == total_tests) {
-			Console.println("\n${count} tests complete.");
-		}
-		else {
-			Console.println(
-				"Tests failed to run to completion." +
-				" ${count} out of ${total_tests} tests completed."
-			);
-		}
+		Console.print(" .. ${count} tests complete. ");
 	
 		if (errors.size() == 0) {
-			Console.println('All OK');
+			Console.println("All " + TestlibFormatter.GREEN('OK'));
 		}
 		else {
-			Console.println("${errors.size()} tests FAILED");
-			Console.println('================================================');
-			Console.println(
+			Console.println("${errors.size()} tests " + TestlibFormatter.RED('FAILED'));
+			Console.printlnErr('================================================');
+			Console.printlnErr(
 				errors.process() using (e) {
 					return e.error + "\n\t" + e.source;
 				}.join(     "\n------------------------------------------------\n")
 			);
-			Console.println('================================================');
+			Console.printlnErr('================================================');
 		}
 	}
 ];
 
 TestlibFormatter.formats['verbose'] = [
-	'header' => TestlibFormatter.formats['default'].header,
+	'header' => closure (string testsuite, number total_tests) {
+		Console.println("\nTest suite: ${testsuite}");
+		Sys.stdout().flush();
+	},
 	'ok' => closure (number id, string description) {
-		Console.println('OK: ' + description);
+		Console.println(TestlibFormatter.GREEN("  OK") + ': ' + description);
 	},
 	'fail' => closure (number id, string description, string error, string source) {
-		Console.println('FAIL: ' + description);
-		Console.println("\t${error}");
+		Console.println(TestlibFormatter.RED("  FAIL") + ': ' + description);
+		Console.println("    ${error}");
 	},
 	'summary' => closure (number total_tests, number count, array errors) {
 		if (count == total_tests) {
-			Console.println("\n${count} tests complete.");
+			Console.println("  ${count} tests complete.");
 		}
 		else {
 			Console.println(
-				"Tests failed to run to completion." +
-				" ${count} out of ${total_tests} tests completed."
+				"  Tests failed to run to completion." +
+				"  ${count} out of ${total_tests} tests completed."
 			);
 		}
 	
 		if (errors.size() == 0) {
-			Console.println('All OK');
+			Console.println(TestlibFormatter.GREEN('All OK'));
 		}
 		else {
-			Console.println("${errors.size()} tests FAILED");
-			Console.println('================================================');
-			Console.println(
+			Console.println(TestlibFormatter.RED("${errors.size()} tests FAILED"));
+			Console.printlnErr('================================================');
+			Console.printlnErr(
 				errors.process() using (e) {
 					return e.error + "\n\t" + e.source + "\n" + e.trace;
 				}.join(     "\n------------------------------------------------\n")
 			);
-			Console.println('================================================');
+			Console.printlnErr('================================================');
 		}
 	}
 ];
