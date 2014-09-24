@@ -44,7 +44,7 @@ class TestlibFormatter {
 
 TestlibFormatter.formats['default'] = [
 	'header' => closure (string testsuite, number total_tests) {
-		Console.print('Test suite: ' + testsuite);
+		Console.print('- ' + testsuite);
 		Sys.stdout().flush();
 	},
 	'ok' => closure (number id, string description) {},
