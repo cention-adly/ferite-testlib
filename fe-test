@@ -25,7 +25,8 @@ find_files_to_monitor () {
 	find \
 		-not -path '*/.*' \
 		-and -not -path '*/FarmYard*' \
-		-and -regex '.*([.]fe[ch]?)|osm'
+		-and -not -wholename $SUMMARY_LOG \
+		-and -not -type d
 }
 
 get_timestamp () {
@@ -62,10 +63,9 @@ if [ $WATCH -eq 1 ];then
 		while true;do
 			sleep 1
 			for x in `find_files_to_monitor`;do
-				t=`get_timestamp $x`
-				if [ $t -ne ${TIMESTAMPS[$x]} ];then
-					TIMESTAMPS[$x]=$t
-					clear
+				timestamp=`get_timestamp $x`
+				if [ $timestamp -ne ${TIMESTAMPS[$x]} ];then
+					TIMESTAMPS[$x]=$timestamp
 					run_tests
 				fi
 			done
