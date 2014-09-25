@@ -22,7 +22,10 @@ find_testdirs () {
 }
 
 find_files_to_monitor () {
-	find -not -path '*/.*' -and -not -path '*/FarmYard*'
+	find \
+		-not -path '*/.*' \
+		-and -not -path '*/FarmYard*' \
+		-and -regex '.*([.]fe[ch]?)|osm'
 }
 
 get_timestamp () {
@@ -34,7 +37,7 @@ run_tests () {
 
 	for x in `find_testdirs`;do
 		cd $x
-			for t in *;do
+			for t in *.fe;do
 				ferite $t ${FERITE_ARGS[@]} 2>> $SUMMARY_LOG
 			done
 		cd ..
