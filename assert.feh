@@ -20,10 +20,12 @@ function assert_error (string err_match) {
 class Assert {
 	void SUBJECT;
 	object doesNot;
+	object does_not;
 
 	function constructor (void subject) {
 		.SUBJECT = subject;
 		.doesNot = new NotAssert(.SUBJECT);
+		.does_not = .doesNot;
 	}
 	
 	static function parray (array a) {
@@ -92,6 +94,18 @@ class NotAssert {
 
 	function constructor (void subject) {
 		.SUBJECT = subject;
+	}
+	
+	function equal (void t) {
+		.equals(t);
+	}
+	
+	function contain (void t) {
+		.contains(t);
+	}
+	
+	function contain (string k, void t) {
+		.contains(k,t);
 	}
 	
 	function equals (string t) {

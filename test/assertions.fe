@@ -64,4 +64,10 @@ testsuite('Assertions') using {
 			'number' => 1
 		]).doesNot.contains('ghost','shark');
 	};
+	
+	testcase('alternate spelling of methods') using {
+		assert(1).does_not.equal(2);
+		assert([1,2,3]).does_not.contain(4);
+		assert(['hello' => 'world']).does_not.contain(['ghost'=>'shark']);
+	};
 };
