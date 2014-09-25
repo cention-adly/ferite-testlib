@@ -21,5 +21,8 @@
 		<copy source="testlib.module" target="$(FeriteModuleSourceDir)" maintainpath="true" />
 		<copy source="testlib.xml" target="$(FeriteModuleDescriptionDir)" />
 		<execute program="feritedoc" arguments="--regenerate" />
+		<execute program="mkdir" arguments="-p ~/bin" />
+		<execute program="cp" arguments="fe-runtests ~/bin/fe-runtests" />
+		<execute program="chmod" arguments="+x ~/bin/fe-runtests" />
 	</phase>
 </yard>
