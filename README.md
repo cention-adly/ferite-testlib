@@ -39,27 +39,30 @@ it finds.
 
 # Testlib
 
-`testlib` exposes two functions: `testsuite` and `testcase`. Testcases are executed
-in a closure using `testsuite`:
+`testlib` exposes two functions: [testsuite](#function:-testsuite) and
+[testcase](#function:-testcase). Testcases are executed in a closure using `testsuite`:
 
     testsuite("description") using {
 		// testcases go here
 	};
 
-It is the `testsuite` function that is responsible for invoking the testcases. The
-testcases themselves merely register their closures with the testsuite. This allows
-the testsuite to automatically keep track of how many testcases are defined before
-even running any of the tests. After invoking the closure passed to it the `testsuite`
-function runs all the registered testcases and generates the test output.
+`testlib` defines failure as uncaught errors. To signal to testlib that a test has
+failed simply raise an error:
+
+    testsuite('Failure') using {
+		testcase('this demonstrates a failed test') {
+			raise new Error('example failure');
+		};
+	};
 
 To run a test you simply execute the test script:
 
-    ferite my_test_script.fe
+	ferite my_test_script.fe
 
 The `testsuite` function checks command line arguments to determine how to format the
 test output. You can change the output format by supplying the formatter name:
 
-    ferite my_test_script.fe -- verbose
+	ferite my_test_script.fe -- verbose
 	
 The following formatters are currently supported:
 
@@ -67,7 +70,37 @@ The following formatters are currently supported:
 - verbose - Prints verbose test reports
 - tap - Prints test reports conforming to the [test anything protocol (TAP)](http://testanything.org/)
 
+## Function: testsuite
+
+    testsuite (string description) using {};
+
+This function is responsible for invoking the testcases. The testcases themselves
+merely register their closures with the testsuite. This allows the testsuite to
+automatically keep track of how many testcases are defined before even running any
+of the tests. After invoking the closure passed to it the `testsuite` function runs
+all the registered testcases and generates the test output.
+
+## Function: testcase
+
+    testcase (string description) using {};
+	
+This function registers a closure to be executed by the `testsuite` function.
+
 # Assert
+
+The `assert` module exposes two functions: [assert](#function:-assert) and
+[assert_error](#function:-assert_error). They provide an clean interface for raising
+assertion errors to signal to `testlib` that a test has failed.
+
+## Function: assert
+
+    assert(void object_to_test);
+
+This is actually a factory function that returns an [Assert](#class:-assert) object. The returned object
+exposes methods that allows tests to be done on the input of `assert` which will
+raise assertion errors when the tests fail.
+
+## Class: Assert
 
 ...
 
