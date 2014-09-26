@@ -1,4 +1,5 @@
-## Ferite Testlib
+Ferite Testlib
+==============
 
 Ferite testlib consists of several ferite modules and a shell script to write and
 run tests. Tests are organized into test suites and test cases. The API has been
@@ -33,14 +34,14 @@ Finally there is the [fe-runtest](#fe-runtest) script that you can use to recurs
 scan your project directory for test directories and it will execute all test
 scripts it finds.
 
-## Testlib
+# Testlib
 
 ...
 
-## Assert
+# Assert
 
 ...
 
-## Fe-Runtest
+# Fe-Runtest
 
 ...
