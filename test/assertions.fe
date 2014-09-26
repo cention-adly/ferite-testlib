@@ -7,7 +7,7 @@ testsuite('Assertions') using {
 		assert([1,2,3]).equals([1,2,3]);
 	};
 	
-	testcase('assert.is failure') using {
+	testcase('assert.equals failure') using {
 		assert_error('should equal') using {
 			assert('hello').equals('bye');
 		};
@@ -17,6 +17,11 @@ testsuite('Assertions') using {
 		assert_error('should equal') using {
 			assert([1,2,3]).equals([1,2]);
 		};
+	};
+	
+	testcase('assert.equals(null)') using {
+		void t = null;
+		assert(t).equals(null);
 	};
 	
 	testcase('must fail') using {
