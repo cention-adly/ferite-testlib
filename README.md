@@ -5,22 +5,20 @@ Ferite testlib consists of several ferite modules and a shell script to write an
 run tests. Tests are organized into test suites and test cases. The API has been
 designed to be easy to read and requires minimal boilerplate to write:
 
-'''
-uses 'testlib', 'assert'; // really, this is all the boilerplate
-
-testsuite('Numerical values') using {
-	testcase('equality of integer representations') using {
-		assert(100).equals(0x64);
-		assert(0144).equals(100);
-		assert(0x64).equals(0b1100100);
-	};
+	uses 'testlib', 'assert'; // really, this is all the boilerplate
 	
-	testcase('canonical string conversions') using {
-		assert('' + 0x64).equals('100');
-		assert('' + 0144).does_not.equal('0144');
+	testsuite('Numerical values') using {
+		testcase('equality of integer representations') using {
+			assert(100).equals(0x64);
+			assert(0144).equals(100);
+			assert(0x64).equals(0b1100100);
+		};
+		
+		testcase('canonical string conversions') using {
+			assert('' + 0x64).equals('100');
+			assert('' + 0144).does_not.equal('0144');
+		};
 	};
-};
-'''
 
 The core module is [testlib](#testlib) which is basically a test harness framework.
 
