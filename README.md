@@ -2,9 +2,13 @@ Ferite Testlib
 ==============
 
 Ferite testlib consists of several ferite modules ([testlib](#testlib),[assert](#assert))
-and a shell script ([fe-runtests](#fe-runtests)) to write and run tests.
-Tests are organized into test suites and test cases. The API has been designed to be
-easy to read and requires minimal boilerplate to write:
+and a shell script ([fe-runtests](#fe-runtests)) that allows you to:
+
+- Easily write clean, readable tests.
+- Easily run tests.
+- Organize test suites and test cases.
+
+The API has been designed to be easy to read and requires minimal boilerplate to write:
 
 	uses 'testlib', 'assert'; // really, this is all the boilerplate
 	
@@ -52,7 +56,16 @@ To run a test you simply execute the test script:
 
     ferite my_test_script.fe
 
+The `testsuite` function checks command line arguments to determine how to format the
+test output. You can change the output format by supplying the formatter name:
 
+    ferite my_test_script.fe -- verbose
+	
+The following formatters are currently supported:
+
+- default - The default formatter, prints minimal info
+- verbose - Prints verbose test reports
+- tap - Prints test reports conforming to the [test anything protocol (TAP)](http://testanything.org/)
 
 # Assert
 
