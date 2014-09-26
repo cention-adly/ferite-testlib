@@ -1,0 +1,14 @@
+uses '../testlib', '../assert';
+
+testsuite('Numerical values') using {
+	testcase('equality of integer representations') using {
+		assert(100).equals(0x64);
+		assert(0144).equals(100);
+		assert(0x64).equals(0b1100100);
+	};
+	
+	testcase('canonical string conversions') using {
+		assert('' + 0x64).equals('100');
+		assert('' + 0144).does_not.equal('0144');
+	};
+};
