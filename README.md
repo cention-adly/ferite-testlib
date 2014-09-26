@@ -39,8 +39,8 @@ it finds.
 
 # Testlib
 
-`testlib` exposes two functions: [testsuite](#function:-testsuite) and
-[testcase](#function:-testcase). Testcases are executed in a closure using `testsuite`:
+`testlib` exposes two functions: [testsuite](#function-testsuite) and
+[testcase](#function-testcase). Testcases are executed in a closure using `testsuite`:
 
     testsuite("description") using {
 		// testcases go here
@@ -88,15 +88,15 @@ This function registers a closure to be executed by the `testsuite` function.
 
 # Assert
 
-The `assert` module exposes two functions: [assert](#function:-assert) and
-[assert_error](#function:-assert_error). They provide an clean interface for raising
+The `assert` module exposes two functions: [assert](#function-assert) and
+[assert_error](#function-assert_error). They provide an clean interface for raising
 assertion errors to signal to `testlib` that a test has failed.
 
 ## Function: assert
 
     assert(void object_to_test);
 
-This is actually a factory function that returns an [Assert](#class:-assert) object. The returned object
+This is actually a factory function that returns an [Assert](#class-assert) object. The returned object
 exposes methods that allows tests to be done on the input of `assert` which will
 raise assertion errors when the tests fail.
 
