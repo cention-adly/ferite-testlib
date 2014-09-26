@@ -100,9 +100,42 @@ This is actually a factory function that returns an [Assert](#class-assert) obje
 exposes methods that allows tests to be done on the input of `assert` which will
 raise assertion errors when the tests fail.
 
+## Function: assert_error
+
+	assert_error(string error_message_regex) using {};
+	
+This function executes a closure passed to it via `using` and test to see if an error
+with a message matching the `error_message_regex` has been raised. This is useful to
+test that you have implemented errors correctly.
+
 ## Class: Assert
 
-...
+Objects constructed from this class are returned by the [assert](#function-assert)
+function. This class exposes various methods to test the value of `assert` against:
+
+### Method: Equals
+
+	assert(subject).equals(value);
+
+Test to see if two objects are equal. Tests are available for `String`s, `Number`s and
+`Array`s. Objects can't currently be tested.
+
+### Method: Contains
+
+	assert(subject).contains(value);
+	assert(subject).contains(key,value);
+	
+Test if an array contains a value. The second form tests if an associative array
+contains a key=>value pair.
+
+### Object: DoesNot
+
+	assert(subject).doesNot
+	assert(subject).does_not
+	
+Negative assertions. The `doesNot` object has all the methods of the `Assert` object
+but the test results are opposite. It may also be accessed as `.does_not` for people
+who don't like camelCase.
 
 # Fe-Runtest
 
