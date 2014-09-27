@@ -1,4 +1,3 @@
-uses 'console', 'sys';
 
 class TestlibFormatter {
 	static array formats;
@@ -60,7 +59,8 @@ TestlibFormatter.formats['default'] = [
 			Console.printlnErr('================================================');
 			Console.printlnErr(
 				errors.process() using (e) {
-					return e.error + "\n\t" + e.source;
+					return  "${e.testsuite} -> ${e.testcase}\n${e.error}" +
+							"\n\t${e.source}";
 				}.join(     "\n------------------------------------------------\n")
 			);
 			Console.printlnErr('================================================');
@@ -99,7 +99,8 @@ TestlibFormatter.formats['verbose'] = [
 			Console.printlnErr('================================================');
 			Console.printlnErr(
 				errors.process() using (e) {
-					return e.error + "\n\t" + e.source + "\n" + e.trace;
+					return  "Test Suite: ${e.testsuite}\nTest Case: ${e.testcase}\n${e.error}" +
+							"\n\t${e.source}\n${e.trace}";					
 				}.join(     "\n------------------------------------------------\n")
 			);
 			Console.printlnErr('================================================');

@@ -49,7 +49,8 @@ namespace TestSuite {
 			handle {
 				void trace = err.backtrace[1];
 				.errors.push([
-					'description' => t.description,
+					'testsuite' => .description,
+					'testcase' => t.description,
 					'error' => err.str,
 					'source' => "${trace['file']}:${trace['line']}",
 					'trace' => err.backtrace[2..].process() using (t) {
