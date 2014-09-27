@@ -41,16 +41,25 @@ class Assert {
 	}
 	
 	function equals (array t) {
-		if (.SUBJECT.size() == t.size()) {
-			for (number i=0;i<t.size();i++) {
-				assert(.SUBJECT[i]).equals(t[i]);
+		number err_count = !(.SUBJECT.size() == t.size());
+
+		if (!err_count) {
+			monitor {
+				for (number i=0;i<t.size();i++) {
+					assert(.SUBJECT[i]).equals(t[i]);
+				}
 			}
-			return;
+			handle {
+				err_count ++;
+			}
 		}
-		raise new Error(
-			'Assertion Error: ' + Assert.parray(.SUBJECT) +
-			' should equal ' + Assert.parray(t)
-		);
+		
+		if (err_count) {
+			raise new Error(
+				'Assertion Error:' + Assert.parray(.SUBJECT) +
+				'should equal' + Assert.parray(t)
+			);
+		}
 	}
 	
 	function equals (number t) {
@@ -121,16 +130,25 @@ class NotAssert {
 	}
 	
 	function equals (array t) {
-		if (.SUBJECT.size() != t.size()) {
-			for (number i=0;i<t.size();i++) {
-				assert(.SUBJECT[i]).equals(t[i]);
+		number err_count = !(.SUBJECT.size() == t.size());
+
+		if (!err_count) {
+			monitor {
+				for (number i=0;i<t.size();i++) {
+					assert(.SUBJECT[i]).equals(t[i]);
+				}
 			}
-			return;
+			handle {
+				err_count ++;
+			}
 		}
-		raise new Error(
-			'Assertion Error:' + Assert.parray(.SUBJECT) +
-			'should not equal' + Assert.parray(t)
-		);
+		
+		if (!err_count) {
+			raise new Error(
+				'Assertion Error:' + Assert.parray(.SUBJECT) +
+				'should not equal' + Assert.parray(t)
+			);
+		}
 	}
 	
 	function equals (number t) {

@@ -70,6 +70,13 @@ testsuite('Assertions') using {
 		]).doesNot.contains('ghost','shark');
 	};
 	
+	testcase('corner cases') using {
+		assert_error('should equal') using {
+			assert([1,2,3]).equals([1,2,5]);
+		};
+		assert([1,2,3]).doesNot.equal([1,2,5]);
+	};
+	
 	testcase('alternate spelling of methods') using {
 		assert(1).does_not.equal(2);
 		assert([1,2,3]).does_not.contain(4);
