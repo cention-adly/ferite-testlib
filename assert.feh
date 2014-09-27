@@ -12,9 +12,9 @@ function assert_error (string err_match) {
 	}
 	handle {
 		if (Regexp.match(err_match,err.str)) return;
-		else raise new Error('Assertion: Error "' + err.str + '" should match "' + err_match + '"');
+		else raise new Error('Assertion Error: Error message "' + err.str + '" should match "' + err_match + '"');
 	}
-	raise new Error('Assertion: Expected error "' + err_match + '" not raised');
+	raise new Error('Assertion Error: Expected error "' + err_match + '" not raised');
 }
 
 class Assert {
@@ -37,7 +37,7 @@ class Assert {
 	
 	function equals (string t) {
 		if (.SUBJECT == t) return;
-		raise new Error('Assertion: ' + .SUBJECT + ' should equal ' + t);
+		raise new Error("Assertion Error: '${.SUBJECT}' should equal '${t}'");
 	}
 	
 	function equals (array t) {
@@ -48,14 +48,21 @@ class Assert {
 			return;
 		}
 		raise new Error(
-			'Assertion:' + Assert.parray(.SUBJECT) +
-			'should equal' + Assert.parray(t)
+			'Assertion Error: ' + Assert.parray(.SUBJECT) +
+			' should equal ' + Assert.parray(t)
 		);
 	}
 	
 	function equals (number t) {
 		if (.SUBJECT == t) return;
-		raise new Error('Assertion: ' + .SUBJECT + ' should equal ' + t);
+		raise new Error("Assertion Error: '${.SUBJECT}' should equal '${t}'");
+	}
+	
+	function equals (object t) {
+		if (t == null) {
+			if (.SUBJECT == t) return;
+			raise new Error("Assertion Error: '${.SUBJECT}' should equal '${t}'");
+		}
 	}
 	
 	function contains (void t) {
@@ -65,8 +72,8 @@ class Assert {
 			}
 		}
 		raise new Error(
-			'Assertion:' + Assert.parray(.SUBJECT) +
-			'should contain: ' + t
+			'Assertion Error:' + Assert.parray(.SUBJECT) +
+			"should contain: '" + t + "'"
 		);
 	}
 	
@@ -82,7 +89,7 @@ class Assert {
 		};
 		if (!found) {
 			raise new Error(
-				'Assertion:' + Assert.parray(err_map) +
+				'Assertion Error:' + Assert.parray(err_map) +
 				'should contain: [' + key + '=>' + t + ']'
 			);
 		}
@@ -110,7 +117,7 @@ class NotAssert {
 	
 	function equals (string t) {
 		if (.SUBJECT != t) return;
-		raise new Error('Assertion: ' + .SUBJECT + ' should not equal ' + t);
+		raise new Error("Assertion Error: '${.SUBJECT}' should not equal '${t}'");
 	}
 	
 	function equals (array t) {
@@ -121,22 +128,22 @@ class NotAssert {
 			return;
 		}
 		raise new Error(
-			'Assertion:' + Assert.parray(.SUBJECT) +
+			'Assertion Error:' + Assert.parray(.SUBJECT) +
 			'should not equal' + Assert.parray(t)
 		);
 	}
 	
 	function equals (number t) {
 		if (.SUBJECT != t) return;
-		raise new Error('Assertion: ' + .SUBJECT + ' should not equal ' + t);
+		raise new Error("Assertion Error: '${.SUBJECT}' should not equal '${t}'");
 	}
 	
 	function contains (void t) {
 		for (number i=0;i<.SUBJECT.size();i++) {
 			if (.SUBJECT[i] == t) {
 				raise new Error(
-					'Assertion:' + Assert.parray(.SUBJECT) +
-					'should not contain: ' + t
+					'Assertion Error:' + Assert.parray(.SUBJECT) +
+					"should not contain: '" + t + "'"
 				);
 			}
 		}
